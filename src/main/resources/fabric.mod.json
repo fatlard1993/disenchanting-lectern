@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "disenchanting-lectern-justfatlard",
+  "version": "${version}",
+  "name": "Disenchanting Lectern",
+  "description": "Put a blank book and quill on a lectern and right-click it with an enchanted item: the item comes back clean and an enchanted book carrying its enchantments pops off. Works with vanilla clients.",
+  "authors": [
+    "justfatlard"
+  ],
+  "contact": {
+    "sources": "https://github.com/fatlard1993/disenchanting-lectern"
+  },
+  "license": "MIT",
+  "icon": "assets/disenchanting-lectern-justfatlard/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "justfatlard.disenchanting_lectern.Main"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${loaderVersion}",
+    "fabric-api": "${fabricApiVersion}",
+    "minecraft": "${minecraftDependency}",
+    "java": ">=25"
+  }
+}
