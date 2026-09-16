@@ -25,8 +25,11 @@ is on it to your chat. Nothing is consumed and nothing changes - a lectern is wh
 ```
 Diamond Pickaxe
   Efficiency IV · level IV of V
+      Mine blocks faster.
   Fortune II · level II of III · not with Silk Touch
+      More drops from blocks that scatter what they hold, like ores and gravel.
   Curse of Vanishing · maxed · a curse, and stays put
+      The item disappears when you die.
 ```
 
 Each enchantment gets the facts the game knows - how near the ceiling the level is, what it refuses
