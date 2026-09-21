@@ -1,0 +1,14 @@
+{
+  "overview": [
+    "Pull the enchantments off an item and into a book, at a lectern. Server-side only: a vanilla lectern and a vanilla book hand back a vanilla enchanted book, so players need nothing installed."
+  ],
+  "versions": {
+    "1.0.1": [
+      "Reading an item on an empty lectern now says what each enchantment actually does in plain English, not just how near the ceiling its level is."
+    ],
+    "1.0.0": [
+      "The step vanilla is missing between the grindstone and the anvil. Put a blank book and quill on a lectern, right-click it with an enchanted item, and the item comes back clean while a book carrying its enchantments pops off.",
+      "The price is a book and quill, no levels. Curses stay put, the prior-work penalty is cleared, and everything moves at once."
+    ]
+  }
+}
