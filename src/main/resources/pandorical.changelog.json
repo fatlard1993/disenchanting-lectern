@@ -4,11 +4,15 @@
   ],
   "versions": {
     "1.0.1": [
-      "Reading an item on an empty lectern now says what each enchantment actually does in plain English, not just how near the ceiling its level is."
+      "Reading an item on an empty lectern says what each enchantment does in plain English.",
+      "Not just how near the ceiling its level is."
     ],
     "1.0.0": [
-      "The step vanilla is missing between the grindstone and the anvil. Put a blank book and quill on a lectern, right-click it with an enchanted item, and the item comes back clean while a book carrying its enchantments pops off.",
-      "The price is a book and quill, no levels. Curses stay put, the prior-work penalty is cleared, and everything moves at once."
+      "The step vanilla is missing between the grindstone and the anvil.",
+      "Put a blank book and quill on a lectern and right-click it with an enchanted item.",
+      "The item comes back clean, and a book carrying its enchantments pops off.",
+      "The price is a book and quill, no levels.",
+      "Curses stay put, the prior-work penalty is cleared, and everything moves at once."
     ]
   }
 }
