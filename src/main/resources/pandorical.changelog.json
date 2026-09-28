@@ -3,6 +3,9 @@
     "Pull the enchantments off an item and into a book, at a lectern. Server-side only: a vanilla lectern and a vanilla book hand back a vanilla enchanted book, so players need nothing installed."
   ],
   "versions": {
+    "1.0.2": [
+      "A mod menu icon you can read at listing size."
+    ],
     "1.0.1": [
       "Reading an item on an empty lectern says what each enchantment does in plain English.",
       "Not just how near the ceiling its level is."
