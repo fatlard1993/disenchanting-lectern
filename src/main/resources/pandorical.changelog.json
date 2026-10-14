@@ -3,6 +3,12 @@
     "Pull the enchantments off an item and into a book, at a lectern. Server-side only: a vanilla lectern and a vanilla book hand back a vanilla enchanted book, so players need nothing installed."
   ],
   "versions": {
+    "1.1.0": [
+      "Split an enchanted book at a lectern: hold a book with several enchantments against a blank book and the top one comes off onto a book of its own.",
+      "A book carrying a curse does not split.",
+      "Items stripped at a lectern can be enchanted at the enchanting table again.",
+      "An item an earlier version stripped is set right by right-clicking any lectern with it."
+    ],
     "1.0.2": [
       "A mod menu icon you can read at listing size."
     ],

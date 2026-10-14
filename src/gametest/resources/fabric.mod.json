@@ -8,7 +8,8 @@
 	"environment": "*",
 	"entrypoints": {
 		"fabric-client-gametest": [
-			"justfatlard.disenchanting_lectern.gametest.SmokeTest"
+			"justfatlard.disenchanting_lectern.gametest.SmokeTest",
+			"justfatlard.disenchanting_lectern.gametest.BooksSplit"
 		]
 	},
 	"depends": {

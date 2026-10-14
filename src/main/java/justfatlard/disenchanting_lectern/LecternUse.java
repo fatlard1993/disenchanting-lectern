@@ -1,6 +1,7 @@
 package justfatlard.disenchanting_lectern;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -34,6 +35,11 @@ public final class LecternUse {
 
 		ItemStack held = player.getItemInHand(hand);
 		if (held.isEmpty()) return InteractionResult.PASS;
+
+		if (Disenchanting.mend(held)) {
+			serverPlayer.sendOverlayMessage(Component.literal("Set right: it can be enchanted again"));
+			return InteractionResult.SUCCESS;
+		}
 
 		if (state.getValue(LecternBlock.HAS_BOOK)) {
 			return Disenchanting.transfer(serverPlayer, serverLevel, pos, state, held);

@@ -13,6 +13,12 @@ The item comes back clean in your hand, an enchanted book carrying its enchantme
 
 This is the step vanilla is missing between the grindstone and the anvil. The grindstone takes enchantments off and destroys them; the anvil puts books on. There is no way to get one back *off* an item you would rather not keep - so a good enchantment on the wrong tool is stuck there.
 
+## Splitting a book
+
+Right-click a lectern with a blank book on it while holding an **enchanted book with several enchantments**, and one comes off onto a book of its own: the one listed at the top of the book's tooltip. The rest stay on the book in your hand. One blank book makes one new book, so a book of four comes apart in three goes. A book with only one enchantment has nothing to split, and the lectern leaves it alone.
+
+A book carrying a **curse** does not split. Splitting would let Mending walk away from the Binding it came with, which is the laundering the lectern refuses for items too; the grindstone is still there for a cursed book you would rather be rid of.
+
 ## Reading enchantments
 
 Right-click an **empty** lectern holding an enchanted item or an enchanted book, and it prints what is on it to your chat. Nothing is consumed and nothing changes - a lectern is where you read things.
@@ -37,7 +43,9 @@ Each enchantment gets the facts the game knows - how near the ceiling the level 
 
 **The prior-work penalty is cleared**, as the grindstone clears it. It is a tax on the enchanting that just left; carrying it on a bare item would make a stripped tool quietly more expensive to work than a fresh one.
 
-**Everything moves at once.** All the item's enchantments go onto one book, rather than one at a time.
+**A stripped item goes back on the enchanting table** like a fresh one. Items stripped by version 1.0 could not; right-click any lectern holding one and it is set right, for nothing.
+
+**Everything moves at once.** All the item's enchantments go onto one book, rather than one at a time. Split the book afterwards to take them apart.
 
 The cost is a book and quill - a workbench price rather than an altar one. No levels.
 

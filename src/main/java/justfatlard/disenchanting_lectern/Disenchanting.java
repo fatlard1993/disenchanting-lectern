@@ -5,6 +5,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -47,14 +49,10 @@ public final class Disenchanting {
 			return InteractionResult.PASS;
 		}
 		if (!isBlankBook(lectern.getBook())) return InteractionResult.PASS;
+		if (held.is(Items.ENCHANTED_BOOK)) return split(player, level, pos, state, lectern, held);
 
 		ItemEnchantments enchantments = held.get(DataComponents.ENCHANTMENTS);
 		if (enchantments == null || enchantments.isEmpty()) return InteractionResult.PASS;
-
-		// An enchanted book's own enchantments live in STORED_ENCHANTMENTS rather than
-		// ENCHANTMENTS, so one held against a lectern reads as unenchanted here and falls through.
-		// That is the right answer anyway: there is nothing to move a book's enchantments into
-		// except another book.
 
 		ItemEnchantments.Mutable moving = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
 		ItemEnchantments.Mutable staying = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
@@ -74,14 +72,68 @@ public final class Disenchanting {
 		if (moved.isEmpty()) return InteractionResult.PASS;
 
 		strip(held, staying.toImmutable());
-		consumeBlankBook(player, level, pos, state, lectern);
-		popOff(level, pos, bookOf(moved));
+		finish(player, level, pos, state, lectern, bookOf(moved));
+		return InteractionResult.SUCCESS;
+	}
 
+	/**
+	 * Splitting a book: one enchantment off a book that carries several, onto the blank one.
+	 *
+	 * <p>One a blank book, because one blank book makes one enchanted book, the same as stripping
+	 * an item. The one at the top of the book's tooltip comes off and the rest stay on the book in
+	 * your hand, so a book of four comes apart in three goes.
+	 *
+	 * <p>A book carrying a curse does not split. Splitting would let Mending walk away from the
+	 * Binding it came bound to, which is the laundering a lectern refuses for items too; the
+	 * grindstone is still there for a cursed book you would rather be rid of.
+	 */
+	private static InteractionResult split(ServerPlayer player, ServerLevel level, BlockPos pos, BlockState state,
+			LecternBlockEntity lectern, ItemStack held) {
+		ItemEnchantments stored = held.get(DataComponents.STORED_ENCHANTMENTS);
+		if (stored == null || stored.size() < 2) return InteractionResult.PASS;
+		for (Holder<Enchantment> enchantment : stored.keySet()) {
+			if (enchantment.is(EnchantmentTags.CURSE)) {
+				player.sendOverlayMessage(Component.literal("A cursed book doesn't come apart"));
+				return InteractionResult.FAIL;
+			}
+		}
+
+		Holder<Enchantment> top = topOf(level, stored);
+		ItemEnchantments.Mutable taking = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+		ItemEnchantments.Mutable leaving = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+		for (Object2IntMap.Entry<Holder<Enchantment>> entry : stored.entrySet()) {
+			(entry.getKey().equals(top) ? taking : leaving).set(entry.getKey(), entry.getIntValue());
+		}
+
+		held.set(DataComponents.STORED_ENCHANTMENTS, leaving.toImmutable());
+		// Each half is a lighter book than the whole was; the work that went into the whole is
+		// cleared, as stripping an item clears it.
+		held.set(DataComponents.REPAIR_COST, 0);
+		finish(player, level, pos, state, lectern, bookOf(taking.toImmutable()));
+		return InteractionResult.SUCCESS;
+	}
+
+	/**
+	 * The enchantment at the top of the book's tooltip: the one the player sees first, so the one
+	 * they can tell will come off before they click. The book holds its enchantments in no order
+	 * of its own; the tooltip sorts them by the game's tooltip order tag, and so does this.
+	 */
+	private static Holder<Enchantment> topOf(ServerLevel level, ItemEnchantments stored) {
+		var order = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(EnchantmentTags.TOOLTIP_ORDER);
+		if (order.isPresent()) {
+			for (Holder<Enchantment> enchantment : order.get()) if (stored.getLevel(enchantment) > 0) return enchantment;
+		}
+		return stored.keySet().iterator().next();
+	}
+
+	/** The blank book spent, the new one handed over, and the lectern's sound and sparkle. */
+	private static void finish(ServerPlayer player, ServerLevel level, BlockPos pos, BlockState state,
+			LecternBlockEntity lectern, ItemStack made) {
+		consumeBlankBook(player, level, pos, state, lectern);
+		popOff(level, pos, made);
 		level.playSound(null, pos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
 		level.sendParticles(ParticleTypes.ENCHANT,
 			pos.getX() + 0.5, pos.getY() + 1.2, pos.getZ() + 0.5, 16, 0.3, 0.2, 0.3, 0.5);
-
-		return InteractionResult.SUCCESS;
 	}
 
 	/**
@@ -106,16 +158,28 @@ public final class Disenchanting {
 	 * @param keeping the enchantments that do not come off, usually none
 	 */
 	private static void strip(ItemStack held, ItemEnchantments keeping) {
-		if (keeping.isEmpty()) {
-			held.remove(DataComponents.ENCHANTMENTS);
-		} else {
-			held.set(DataComponents.ENCHANTMENTS, keeping);
-		}
+		// Set empty, never removed. The enchanting table only takes an item whose enchantments are
+		// there and empty: one with the component taken away altogether reads as not enchantable at
+		// all, and a stripped sword could never be enchanted again.
+		held.set(DataComponents.ENCHANTMENTS, keeping);
 
 		// The prior-work penalty is a tax on the enchanting that just left. Carrying it on an item
 		// that is now bare would make a stripped tool quietly more expensive to work than a fresh
 		// one, which is the opposite of what stripping it was for. The grindstone clears it too.
-		held.remove(DataComponents.REPAIR_COST);
+		held.set(DataComponents.REPAIR_COST, 0);
+	}
+
+	/**
+	 * An item an earlier version of this mod stripped, put right: its enchantments were taken away
+	 * altogether rather than emptied, which leaves it refused by the enchanting table for good.
+	 *
+	 * @return whether there was anything to put right
+	 */
+	public static boolean mend(ItemStack held) {
+		if (held.has(DataComponents.ENCHANTMENTS) || !held.getPrototype().has(DataComponents.ENCHANTMENTS)) return false;
+		held.set(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+		if (!held.has(DataComponents.REPAIR_COST)) held.set(DataComponents.REPAIR_COST, 0);
+		return true;
 	}
 
 	private static ItemStack bookOf(ItemEnchantments enchantments) {
