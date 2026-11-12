@@ -1,0 +1,41 @@
+{
+  "demo": {
+    "name": "Disenchanting Lectern",
+    "icon": "minecraft:lectern",
+    "about": [
+      "A lectern with a blank book and quill on it pulls the enchantments off an item and into a book, and splits a book of several enchantments one at a time.",
+      "Place a lectern, put a book and quill on it, and use it holding the enchanted pickaxe or sword. Use an empty lectern with anything enchanted to read what it carries, and split the big book on a lectern with a fresh book and quill."
+    ]
+  },
+  "pvp_preset": 1,
+  "needs": ["disenchanting-lectern-justfatlard"],
+  "preset": {
+    "name": "Disenchanting Lectern",
+    "icon": "minecraft:lectern",
+    "pvp": false,
+    "game_mode": "survival",
+    "entry_kit": [
+      {"slot": 0, "item": {"id": "minecraft:lectern", "count": 2}},
+      {"slot": 1, "item": {"id": "minecraft:diamond_pickaxe", "count": 1, "components": {"minecraft:enchantments": {"minecraft:efficiency": 4, "minecraft:fortune": 2, "minecraft:unbreaking": 3}}}},
+      {"slot": 2, "item": {"id": "minecraft:iron_sword", "count": 1, "components": {"minecraft:enchantments": {"minecraft:sharpness": 3, "minecraft:looting": 2, "minecraft:vanishing_curse": 1}}}},
+      {"slot": 3, "item": {"id": "minecraft:enchanted_book", "count": 1, "components": {"minecraft:stored_enchantments": {"minecraft:protection": 3, "minecraft:unbreaking": 2, "minecraft:mending": 1, "minecraft:feather_falling": 4}}}},
+      {"slot": 4, "item": {"id": "minecraft:writable_book", "count": 1}},
+      {"slot": 5, "item": {"id": "minecraft:writable_book", "count": 1}},
+      {"slot": 6, "item": {"id": "minecraft:writable_book", "count": 1}},
+      {"slot": 7, "item": {"id": "minecraft:writable_book", "count": 1}},
+      {"slot": 8, "item": {"id": "minecraft:bread", "count": 8}},
+      {"slot": 9, "item": {"id": "minecraft:writable_book", "count": 1}},
+      {"slot": 10, "item": {"id": "minecraft:writable_book", "count": 1}},
+      {"slot": 36, "item": {"id": "minecraft:diamond_boots", "count": 1, "components": {"minecraft:enchantments": {"minecraft:depth_strider": 3, "minecraft:soul_speed": 2}}}}
+    ],
+    "respawn_kit": "entry",
+    "goal": "time",
+    "mobs": "off",
+    "life": 15,
+    "size": 2,
+    "world": "overworld",
+    "shape": "flat",
+    "biome": "minecraft:plains",
+    "weather": "clear"
+  }
+}
