@@ -22,6 +22,7 @@ public class Main implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		UseBlockCallback.EVENT.register(LecternUse::onUseBlock);
+		EnchantmentReadout.register();
 
 		// Server data rather than client resources: the prose is composed into chat messages here and
 		// sent as finished text, so it has to be readable on a server whose players run vanilla.

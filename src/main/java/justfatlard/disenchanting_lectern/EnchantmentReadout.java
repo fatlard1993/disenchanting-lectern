@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -44,6 +46,12 @@ public final class EnchantmentReadout {
 
 	/** Last readout per player, so a held button does not flood the chat. */
 	private static final Map<UUID, Long> lastRead = new HashMap<>();
+
+	/** Game time is per world, so a time remembered from the last world would hold the cooldown shut in the next. */
+	static void register() {
+		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> lastRead.remove(handler.getPlayer().getUUID()));
+		ServerLifecycleEvents.SERVER_STOPPED.register(server -> lastRead.clear());
+	}
 
 	public static InteractionResult describe(ServerPlayer player, ServerLevel level, ItemStack held) {
 		ItemEnchantments enchantments = enchantmentsOn(held);
